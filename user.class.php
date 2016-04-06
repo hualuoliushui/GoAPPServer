@@ -13,6 +13,7 @@ class user{
 	 */
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
+		var_dump($userData);
 		$userName = $userData[0];
 		$userPassword = $userData[1];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
@@ -98,7 +99,7 @@ class user{
 }
 
 //test
-$user1 = new user;
+/*$user1 = new user;
 
 if($user1->login(array("root","root")))
 	echo "login succeed\n";
@@ -115,5 +116,5 @@ if($user1->signIn(array("Hxuhao233","12345")))
 	echo "sign in succeed\n";
 else
 	echo "sign in failed\n";
-
+*/
 ?>

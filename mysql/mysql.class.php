@@ -44,8 +44,9 @@ class mysqlHandler
 	}
 
 	private function excute($query){
-		$this->result = $this->link->query($query);
-		return $this->result;
+		//$this->result = $this->link->query($query);
+		//return $this->result;
+		return $this->link->query($query);
 	}
 
 	public function select($column = "*" , $conditions = array()){

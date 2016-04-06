@@ -48,6 +48,7 @@ require_once './getPOI.php';
 	{
 		//global $tcp_worker;
 		$decode = explode("|", $data);
+		$decode =str_replace("\r\n", "", $decode);
 		switch ($decode[0]) {
 			case 'G':
 				# code...
@@ -56,8 +57,9 @@ require_once './getPOI.php';
 				break;
 			case 'L':
 				#
+				$userData =str_replace("\n", "", $decode);
 				$userData = explode("&", $decode[1]);
-				var_dump($userData);
+				//var_dump($userData);
 				if(user::login($userData)){
 					if(!isset($connection->uid))
 						$connection->uid = $connection->id;
