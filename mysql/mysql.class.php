@@ -6,7 +6,8 @@
 class mysqlHandler
 {
 	private $table = null;
-	private  $link = null;
+	private $link = null;
+	private $result = null;
 /*
 	public function __set($name , $value){  
 	        $this->values[$name] = $value;  
@@ -25,6 +26,14 @@ class mysqlHandler
 		$this->link = new mysqli("127.0.0.1", "root", "hxh896900488", "$db");
 		$this->table = $table;
 	}
+	public function __destory(){
+		if(!is_null($this->link))
+			$this->link->close();
+		if(!is_null($this->result))
+			$this->result->free();
+	}
+
+
 	public function getLink(){
 		return $this->link;
 	}
@@ -35,7 +44,8 @@ class mysqlHandler
 	}
 
 	private function excute($query){
-		return $this->link->query($query);
+		$this->result = $this->link->query($query);
+		return $this->result;
 	}
 
 	public function select($column = "*" , $conditions = array()){
@@ -51,9 +61,9 @@ class mysqlHandler
 		        else
 		            	$qualifier .= "`$key`= \"" . $this->clear($value) . "\" ";  
 		 }  
-		 echo $qualifier;
+		//echo $qualifier;
 		$sql .=  $qualifier ? "WHERE $qualifier " :null; 
-		echo $sql;
+		//echo $sql;
 		return $this->excute($sql);
 	}
 
@@ -110,7 +120,7 @@ class mysqlHandler
          	$colValues = substr($colValues, 0, strlen($colValues) - 1);
 
 		$sql="INSERT INTO `$this->table` (".$colNames.") VALUES (".$colValues .')';
-		echo $sql;
+		//echo $sql;
 
 		return $this->excute($sql);
 	}

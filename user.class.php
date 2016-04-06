@@ -26,7 +26,7 @@ class user{
 		if($result = $mysqli->update($updateData,$conditions)){
 			if($mysqli->getLink()->affected_rows==1){
 				return true;
-		}	
+			}	
 		}
 		
 		return false;
@@ -75,21 +75,22 @@ class user{
 							);
 		
 		if($result = $mysqli->select($col,$conditions)){
-		//	var_dump($result->fetch_assoc());
-			if($result->fetch_assoc()[0]==0){		
-			$userPassword = $userData[1];
-			$insertData = array(
-						'name' => $userName,
-						'password' => $userPassword
-						);
+			$colnum=$result->fetch_assoc()["COUNT(*)"];
+			echo $colnum;
+			if($colnum==0){		
+				$userPassword = $userData[1];
+				$insertData = array(
+							'name' => $userName,
+							'password' => $userPassword
+							);
 
-			$result = $mysqli->insert($insertData);
-			return $result;
+				$result = $mysqli->insert($insertData);
+				return $result;
 			}else{
-				return null;
+				return false;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	
@@ -98,21 +99,21 @@ class user{
 
 //test
 $user1 = new user;
-/*
+
 if($user1->login(array("root","root")))
-	echo 'login succeed';
+	echo "login succeed\n";
 else
-	echo 'login failed';
+	echo "login failed\n";
 
 if($user1->logout(array("Hxuhao","12345")))
-	echo 'logout succeed';
+	echo "logout succeed";
 else
-	echo 'logout failed';
-*/
+	echo "logout failed\n";
 
-if(!is_null($user1->signIn(array("Hxuhao233","12345"))))
+
+if($user1->signIn(array("Hxuhao233","12345")))
 	echo "sign in succeed\n";
 else
-	echo 'sign in failed\n';
+	echo "sign in failed\n";
 
 ?>
