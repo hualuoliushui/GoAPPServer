@@ -24,6 +24,7 @@ class mysqlHandler
 */
 	public function __construct($db,$table){
 		$this->link = new mysqli("127.0.0.1", "root", "hxh896900488", "$db");
+		$this->link->query("SET NAMES utf8");
 		$this->table = $table;
 	}
 	public function __destory(){
@@ -35,6 +36,7 @@ class mysqlHandler
 
 
 	public function getLink(){
+
 		return $this->link;
 	}
 
@@ -46,6 +48,7 @@ class mysqlHandler
 	private function excute($query){
 		//$this->result = $this->link->query($query);
 		//return $this->result;
+		echo $query;
 		return $this->link->query($query);
 	}
 

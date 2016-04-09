@@ -14,19 +14,22 @@ class user{
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
 		var_dump($userData);
-		$userName = $userData[0];
+		$userAccount = $userData[0];
 		$userPassword = $userData[1];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
 								'status' => '1'
 								);
 		$conditions = array(
-								'name' => $userName,
+								'account' => $userAccount,
 								'password' => $userPassword
 								);
-		if($result = $mysqli->update($updateData,$conditions)){
+		if($mysqli->update($updateData,$conditions)){
 			if($mysqli->getLink()->affected_rows==1){
-				return true;
+				$col = "name";
+				$result = $mysqli->select($col,$conditions);
+				$name = $result->fetch_assoc()[name];
+				return $name;
 			}	
 		}
 		
@@ -41,14 +44,14 @@ class user{
 	 */
 	public static function logout($userData =array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		$userName = $userData[0];
+		$userAccount = $userData[0];
 		$userPassword = $userData[1];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
 							'status' => '0'
 							);
 		$conditions = array(
-							'name' => $userName,
+							'account' => $userAccount,
 							'password' => $userPassword
 							);		
 		
@@ -68,21 +71,24 @@ class user{
 	 */
 	public static function signIn($userData = array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		$userName = $userData[0];
+		$userAccount = $userData[0];
 		$col = "COUNT(*)";
 		//$conditions =  "`name` = \"".$userName ."\"";
 		$conditions = array(
-							'name' => $userName
+							'account' => $userAccount
 							);
 		
 		if($result = $mysqli->select($col,$conditions)){
 			$colnum=$result->fetch_assoc()["COUNT(*)"];
 			echo $colnum;
 			if($colnum==0){		
-				$userPassword = $userData[1];
+				$userName = $userData[1];
+				$userPassword = $userData[2];
 				$insertData = array(
+							'account' => $userAccount,
 							'name' => $userName,
-							'password' => $userPassword
+							'password' => $userPassword,
+
 							);
 
 				$result = $mysqli->insert($insertData);
@@ -99,20 +105,21 @@ class user{
 }
 
 //test
-/*$user1 = new user;
+/*
+$user1 = new user;
 
-if($user1->login(array("root","root")))
+if($user1->login(array("Hxuhao233","12345")))
 	echo "login succeed\n";
 else
 	echo "login failed\n";
 
-if($user1->logout(array("Hxuhao","12345")))
+if($user1->logout(array("Hxuhao233","12345")))
 	echo "logout succeed";
 else
 	echo "logout failed\n";
-
-
-if($user1->signIn(array("Hxuhao233","12345")))
+*/
+/*
+if($user1->signIn(array("Hxuhao233","何徐昊","12345")))
 	echo "sign in succeed\n";
 else
 	echo "sign in failed\n";

@@ -50,37 +50,37 @@ require_once './getPOI.php';
 		$decode = explode("|", $data);
 		$decode =str_replace("\r\n", "", $decode);
 		switch ($decode[0]) {
-			case 'G':
+
+			//GetPOI|palce&location
+			case 'GetPOI':
 				# code...
 				$returnData =  getPOI::getPOIData($decode[1]);	    	
 		    		$connection->send($returnData);
 				break;
-			case 'L':
+			
+			//Login|account&password	
+			case 'Login':
 				#
 				$userData =str_replace("\n", "", $decode);
 				$userData = explode("&", $decode[1]);
 				//var_dump($userData);
-				if(user::login($userData)){
+				if($name = user::login($userData)){
 					if(!isset($connection->uid))
-						$connection->uid = $connection->id;
+						$connection->uid = $name ;
 					$tcp_worker->connectionsID[$connection->uid] = $connection;		
-					$connection->send("login succeed , your id is $connection->uid\n");
+					$connection->send("login succeed , your name is $connection->uid\n");
 				}else{
 					$connection->send("login failed");
 				}
 
 				break;
-
-			default:
+			
+			//Send|reciverName&message
+			case 'Send':
 				# code...
-				// foreach ($worker->connections as $conn) {
-				// 	var_dump($conn->id);
-				// 	if($decode[0] == $conn->id){
-				// 		$conn->send($decode[1]);
-				// 		echo "send $conn->id\n";
-				// 	}
-				// }	
-				sendMessageByUid($decode[0],$decode[1]);
+			
+				$msg = explode('&',$decode[1]);
+				sendMessageByUid($msg[0],$msg[1]);
 				break;
 				
 		}
