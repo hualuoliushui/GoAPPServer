@@ -8,8 +8,8 @@ require_once './mysql/mysql.class.php';
 class user{
 	/**
 	 * 用户登录
-	 * @param  array  $userData [0] 用户名 [1]密码
-	 * @return [bool]           [成功 TRUE 失败 FALSE]
+	 * @param  array  $userData [0] 账号 [1]密码
+	 * @return [string or bool]           [成功 $name 用户名    失败 FALSE]
 	 */
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
@@ -39,20 +39,20 @@ class user{
 
 	/**
 	 * 用户登出
-	 *  @param  array  $userData [0] 用户名 [1] 密码
+	 *  @param  array  $userName 用户名 
 	 * @return [bool]           [成功 TRUE 失败 FALSE]
 	 */
-	public static function logout($userData =array()){
+	public static function logout($userName){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		$userAccount = $userData[0];
-		$userPassword = $userData[1];
+		
+		
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
 							'status' => '0'
 							);
 		$conditions = array(
-							'account' => $userAccount,
-							'password' => $userPassword
+							'name' => $userName,
+						
 							);		
 		
 		$result = $mysqli->update($updateData,$conditions);

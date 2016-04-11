@@ -13,6 +13,7 @@ require_once './getPOI.php';
 	// 创建一个Worker监听2347端口，不使用任何应用层协议
 	$tcp_worker = new Worker("tcp://0.0.0.0:2347");
 
+	//创建管理用户链接的数组
 	$tcp_worker->connectionsID = array();
 
 	// 启动1个进程对外提供服务
@@ -51,6 +52,7 @@ require_once './getPOI.php';
 		$decode =str_replace("\r\n", "", $decode);
 		switch ($decode[0]) {
 
+			//获取POI信息
 			//GetPOI|palce&location
 			case 'GetPOI':
 				# code...
@@ -58,6 +60,7 @@ require_once './getPOI.php';
 		    		$connection->send($returnData);
 				break;
 			
+			//登录
 			//Login|account&password	
 			case 'Login':
 				#
@@ -70,17 +73,34 @@ require_once './getPOI.php';
 					$tcp_worker->connectionsID[$connection->uid] = $connection;		
 					$connection->send("login succeed , your name is $connection->uid\n");
 				}else{
-					$connection->send("login failed");
+					$connection->send("login failed\n");
 				}
-
 				break;
 			
+			//登出
+			//Logout
+			case 'Logout':
+				$name = $decode[1];
+				if(user::logout($name)){
+					unset($tcp_worker->connectionsID[$name]);
+					$connection->send("logout succeed\n");
+				}else{
+					$connection->send("logout fail\n");
+				}
+				break;
+
+
+
+			//发送消息
 			//Send|reciverName&message
 			case 'Send':
 				# code...
 			
 				$msg = explode('&',$decode[1]);
-				sendMessageByUid($msg[0],$msg[1]);
+				if(sendMessageByUid($msg[0],$msg[1]))
+					$connection->send("send succeed\n");
+				else
+					$connection->send('send failed\n');
 				break;
 				
 		}
@@ -107,6 +127,9 @@ require_once './getPOI.php';
 		{
 	        	$connection = $tcp_worker->connectionsID[$id];
 	        	$connection->send($message);
+	        	return true;
+	    	}else{
+	    		return false;
 	    	}
 	}
 	// 运行所有worker实例
