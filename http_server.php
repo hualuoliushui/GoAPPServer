@@ -11,7 +11,7 @@ require_once './getPOI.php';
 	
 
 	// 创建一个Worker监听2347端口，不使用任何应用层协议
-	$tcp_worker = new Worker("tcp://0.0.0.0:2347");
+	$tcp_worker = new Worker("http://0.0.0.0:2347");
 
 	//创建管理用户链接的数组
 	$tcp_worker->connectionsID = array();
@@ -76,6 +76,7 @@ require_once './getPOI.php';
 					$connection->send("login failed\n");
 				}
 				break;
+		
 			
 			//登出
 			//Logout
