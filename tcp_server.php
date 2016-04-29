@@ -19,26 +19,34 @@ require_once './getPOI.php';
 	// 启动1个进程对外提供服务
 	$tcp_worker->count = 1;
 
-	// $tcp_worker->onWorkerStart = function($worker)
-	// {
-	//     // 定时，每10秒一次
-	//     Timer::add(10, function()use($worker)
-	//     {
-	//         // 遍历当前进程所有的客户端连接，发送当前服务器的时间
-	//         foreach($worker->connections as $connection)
-	//         {
-	//         	//echo "send time to $connection->id\n";
+	$tcp_worker->onWorkerStart = function($worker)
+	{
+		// 定时，每10秒一次
+		Timer::add(10, function()use($worker)
+	     {
+	     		foreach ($worker->connectionsID as $key => $value) {
+	     			# code...
+	     			echo "online user :$key\n";
+	     		}
 
-	//             	//$connection->send(time());
-	//         }
-	//     });
-	// };	
+
+
+	         // 遍历当前进程所有的客户端连接，发送当前服务器的时间
+	         /*foreach($worker->connections as $connection)
+	         {
+	         	//echo "send time to $connection->id\n";
+
+	             	//$connection->send(time());
+	         }*/
+	     });
+	};	
 
 	//当客户端连接时
 	$tcp_worker->onConnect = function($connection)
 	{
 		global $tcp_worker;
 	    	echo "new connection from ip " . $connection->getRemoteIp() . "\n";  
+	    //	$connection->send(json_encode(array("msg" => "hi,sb")));
 	    	// $index = $tcp_worker->id . $connection->id;
 	    	// $connection->id = $index;
 	    	// $connection->send("id : $index\n");
@@ -48,9 +56,22 @@ require_once './getPOI.php';
 	$tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	{
 		//global $tcp_worker;
-		$decode = explode("|", $data);
-		$decode =str_replace("\r\n", "", $decode);
-		switch ($decode[0]) {
+		$data=str_replace("\r\n", "",$data);
+		echo "$data";
+		/*$decode = explode("|", $data);
+		$decode =str_replace("\r\n", "", $decode);*/
+		$jsonData=json_decode($data,true);
+		if(!isset($jsonData["action"])){
+			$errormsg=array(	"code"=>414,
+								"msg" => "error type");
+			echo "from ". $connection->getRemoteIp()."\n";
+		//	sleep(1);
+			if($connection->send(json_encode($errormsg)))
+				echo "send succeed\n";
+			flush();
+			return ;
+		}
+		switch ($jsonData["action"]) {
 
 			//获取POI信息
 			//GetPOI|palce&location
@@ -64,8 +85,10 @@ require_once './getPOI.php';
 			//Login|account&password	
 			case 'Login':
 				#
-				$userData =str_replace("\n", "", $decode);
-				$userData = explode("&", $decode[1]);
+			/*	$userData =str_replace("\n", "", $decode);
+				$userData = explode("&", $decode[1]);*/
+				$userData=$jsonData["data"][0];
+				var_dump($userData[0]);
 				//var_dump($userData);
 				if($name = user::login($userData)){
 					if(!isset($connection->uid))
@@ -80,9 +103,10 @@ require_once './getPOI.php';
 			//登出
 			//Logout
 			case 'Logout':
-				$name = $decode[1];
-				if(user::logout($name)){
-					unset($tcp_worker->connectionsID[$name]);
+				$userData = $jsonData["data"][0];
+				var_dump($userData[0]);
+				if(user::logout($userData)){
+					unset($tcp_worker->connectionsID[$userData["name"]]);
 					$connection->send("logout succeed\n");
 				}else{
 					$connection->send("logout fail\n");
@@ -96,11 +120,18 @@ require_once './getPOI.php';
 			case 'Send':
 				# code...
 			
-				$msg = explode('&',$decode[1]);
-				if(sendMessageByUid($msg[0],$msg[1]))
+				$msg = $jsonData["data"][0];
+				//var_dump($msg);
+				if(sendMessageByUid($msg))
 					$connection->send("send succeed\n");
 				else
 					$connection->send('send failed\n');
+				break;
+
+			default:
+				$errormsg=array(	"code"=>444,
+									"msg" => "unknown msg type");
+				$connection->send(json_encode($errormsg));
 				break;
 				
 		}
@@ -113,6 +144,19 @@ require_once './getPOI.php';
 	    echo "$connection error $code $msg\n";
 	};
 
+	$tcp_worker->onClose = function($connection) use($tcp_worker)
+	{	
+		echo "connection   closed\n";
+		foreach ($tcp_worker->connectionsID as $key=>$value) {
+			# code...
+			if($value==$connection){
+				unset($tcp_worker->connectionsID[$key]);
+				echo "connection with $key closed\n";
+			}
+
+		}
+
+	};
 	//当worker停止时
 	$tcp_worker->onWorkerStop = function($worker)
 	{
@@ -120,13 +164,19 @@ require_once './getPOI.php';
 	};
 
 	//通过connectionID发送消息
-	function sendMessageByUid($id, $message)
+	function sendMessageByUid($msg)
 	{
 		global $tcp_worker;	
-		if(isset($tcp_worker->connectionsID[$id]))
+		$sender=$msg["sender"];
+		$receiver=$msg["receiver"];
+		$msginfo=$msg["msginfo"];
+		$newmsg=array("sender"=>$sender,
+						"msginfo"=>$msginfo);
+		var_dump($newmsg);
+		if(isset($tcp_worker->connectionsID[$receiver]))
 		{
-	        	$connection = $tcp_worker->connectionsID[$id];
-	        	$connection->send($message);
+	        	$connection = $tcp_worker->connectionsID[$receiver];
+	        	$connection->send(json_encode($newmsg));
 	        	return true;
 	    	}else{
 	    		return false;

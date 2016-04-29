@@ -203,12 +203,14 @@ class TcpConnection extends ConnectionInterface
         {
             $parser = $this->protocol;
             $send_buffer = $parser::encode($send_buffer, $this);
+
             if($send_buffer === '')
             {
                 return null;
             }
         }
-        
+       // $send_buffer +="\n";
+
         if($this->_status === self::STATUS_CONNECTING)
         {
             $this->_sendBuffer .= $send_buffer;
@@ -222,7 +224,11 @@ class TcpConnection extends ConnectionInterface
         // Attempt to send data directly.
         if($this->_sendBuffer === '')
         {
+            $send_buffer = $send_buffer."\n";   //这里尝试强行添加换行符
+         //   echo $send_buffer;
             $len = @fwrite($this->_socket, $send_buffer);
+            
+            //echo "end";
             // send successful.
             if($len === strlen($send_buffer))
             {

@@ -34,38 +34,40 @@ require_once './getPOI.php';
 	//     });
 	// };	
 
-	//当客户端连接时
-	$tcp_worker->onConnect = function($connection)
-	{
-		global $tcp_worker;
-	    	echo "new connection from ip " . $connection->getRemoteIp() . "\n";  
-	    	// $index = $tcp_worker->id . $connection->id;
-	    	// $connection->id = $index;
-	    	// $connection->send("id : $index\n");
-	};
-
 	// 当客户端发来数据时
 	$tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	{
 		//global $tcp_worker;
-		$decode = explode("|", $data);
-		$decode =str_replace("\r\n", "", $decode);
-		switch ($decode[0]) {
+		/*foreach ($data["post"] as $key => $value) {
+		 	# code...
+		 	var_dump($key);
+		 	var_dump(json_decode($key));
+		 } */
+		 $tempData=array_keys($data["post"]);
+		 $jsonData=json_decode($tempData[0],true);
+		 var_dump($jsonData);
+		
+		//$connection->send(json_encode(array("name"=>"sb")));
+		//var_dump($_POST["action"]);
+		//$decode=array();
+		//$decode = json_decode($_POST,true);
+		//var_dump($decode);
+		switch ($jsonData["action"]) {
 
 			//获取POI信息
 			//GetPOI|palce&location
 			case 'GetPOI':
 				# code...
-				$returnData =  getPOI::getPOIData($decode[1]);	    	
+				$returnData =  getPOI::getPOIData($jsonData[1]);	    	
 		    		$connection->send($returnData);
 				break;
 			
 			//登录
 			//Login|account&password	
-			case 'Login':
+			case "Login":
 				#
-				$userData =str_replace("\n", "", $decode);
-				$userData = explode("&", $decode[1]);
+				$userData[0]=$jsonData["name"];
+				$userData[1]=$jsonData["password"];
 				//var_dump($userData);
 				if($name = user::login($userData)){
 					if(!isset($connection->uid))
@@ -104,7 +106,7 @@ require_once './getPOI.php';
 					$connection->send('send failed\n');
 				break;
 				
-		}
+		}/**/
 
 	};
 

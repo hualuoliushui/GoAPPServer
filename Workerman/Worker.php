@@ -1364,6 +1364,7 @@ class Worker
         {
             $scheme = ucfirst($scheme);
             $this->protocol = '\\Protocols\\'.$scheme;
+          //  echo "error $this->protocol\n";
             if(!class_exists($this->protocol))
             {
                 $this->protocol = "\\Workerman\\Protocols\\$scheme";

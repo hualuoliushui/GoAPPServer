@@ -9,13 +9,13 @@ class user{
 	/**
 	 * 用户登录
 	 * @param  array  $userData [0] 账号 [1]密码
-	 * @return [string or bool]           [成功 $name 用户名    失败 FALSE]
+	 * @return [string or bool]           [成功 $name  用户名    失败 FALSE]
 	 */
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
 		var_dump($userData);
-		$userAccount = $userData[0];
-		$userPassword = $userData[1];
+		$userAccount = $userData["account"];
+		$userPassword = $userData["password"];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
 								'status' => '1'
@@ -28,7 +28,7 @@ class user{
 			if($mysqli->getLink()->affected_rows==1){
 				$col = "name";
 				$result = $mysqli->select($col,$conditions);
-				$name = $result->fetch_assoc()[name];
+				$name = $result->fetch_assoc()["name"];
 				return $name;
 			}	
 		}
@@ -51,7 +51,7 @@ class user{
 							'status' => '0'
 							);
 		$conditions = array(
-							'name' => $userName,
+							'name' => $userName["name"],
 						
 							);		
 		
