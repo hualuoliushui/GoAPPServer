@@ -369,3 +369,41 @@
 2016-04-29 08:59:37 Workerman[tcp_server.php] start in DEBUG mode
 2016-04-29 09:08:39 Workerman[tcp_server.php] Stopping ...
 2016-04-29 09:08:39 Workerman[tcp_server.php] has been stopped
+2016-05-02 13:57:34 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 13:58:58 Workerman[tcp_server.php] Stopping ...
+2016-05-02 13:58:58 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:09:12 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:10:21 WORKER EXIT UNEXPECTED E_ERROR Class 'user' not found in /home/hxuhao/GoAPPServer/tcp_server.php on line 83
+2016-05-02 14:10:21 worker[none:13829] exit with status 65280
+2016-05-02 14:12:43 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:12:43 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:12:44 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:12:46 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:12:46 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:19:25 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:19:28 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:19:28 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:19:48 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:20:07 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:20:07 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:26:45 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:26:56 WORKER EXIT UNEXPECTED E_ERROR Class 'GoAPPServer\mysqli' not found in /home/hxuhao/GoAPPServer/mysql/mysql.class.php on line 27
+2016-05-02 14:26:56 worker[none:14282] exit with status 65280
+2016-05-02 14:29:26 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:29:26 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:29:28 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:29:38 WORKER EXIT UNEXPECTED E_ERROR Class 'GoAPPServer\mysqlHandler' not found in /home/hxuhao/GoAPPServer/user.class.php on line 16
+2016-05-02 14:29:38 worker[none:14315] exit with status 65280
+2016-05-02 14:30:28 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:30:28 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:30:29 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:30:40 WORKER EXIT UNEXPECTED E_ERROR Class 'GoAPPServer\mysqli' not found in /home/hxuhao/GoAPPServer/mysql/mysql.class.php on line 27
+2016-05-02 14:30:40 worker[none:14448] exit with status 65280
+2016-05-02 14:31:21 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:31:21 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:31:22 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:31:54 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:31:54 Workerman[tcp_server.php] has been stopped
+2016-05-02 14:36:32 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-02 14:39:12 Workerman[tcp_server.php] Stopping ...
+2016-05-02 14:39:12 Workerman[tcp_server.php] has been stopped
