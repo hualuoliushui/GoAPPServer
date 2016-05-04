@@ -1,4 +1,5 @@
 <?php
+
 require_once './mysql/mysql.class.php';
 /**
  * 用户操作类
