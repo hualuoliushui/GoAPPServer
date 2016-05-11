@@ -9,7 +9,7 @@ require_once './getPOI.php';
 /**
  * 要不要写成一个类呢= =
  */
-	
+
 
 // 创建一个Worker监听2347端口，不使用任何应用层协议
 $tcp_worker = new Worker("tcp://0.0.0.0:2347");
@@ -30,13 +30,13 @@ $tcp_worker->onWorkerStart = function($worker)
      			echo "online user :$key\n";
      		}
     	 });
-};	
+};
 
 //当客户端连接时
 $tcp_worker->onConnect = function($connection)
 {
 	global $tcp_worker;
-    	echo "new connection from ip " . $connection->getRemoteIp() . "\n";  
+    	echo "new connection from ip " . $connection->getRemoteIp() . "\n";
     //	$connection->send(json_encode(array("msg" => "hi,sb")));
     	// $index = $tcp_worker->id . $connection->id;
     	// $connection->id = $index;
@@ -49,6 +49,8 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	//global $tcp_worker;
 	$data=str_replace("\r\n", "",$data);
 	echo "$data";
+
+	$returnData;
 	/*$decode = explode("|", $data);
 	$decode =str_replace("\r\n", "", $decode);*/
 	$jsonData=json_decode($data,true);
@@ -61,61 +63,78 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	//	sleep(1);
 		if($connection->send(json_encode($errormsg)))
 			echo "send succeed\n";
-		
+
 		return ;
 	}
 	switch ($jsonData["action"]) {
+
 
 		//获取POI信息
 		//GetPOI|palce&location
 		case 'GetPOI':
 			# code...
-			$returnData =  getPOI::getPOIData($decode[1]);	    	
+
+
+			$returnData =  getPOI::getPOIData($decode[1]);
 	    		$connection->send($returnData);
 			break;
-		
+
 		//登录
-		//Login|account&password	
+		//Login|account&password
 		case 'Login':
-			#
-		/*	$userData =str_replace("\n", "", $decode);
-			$userData = explode("&", $decode[1]);*/
+
 			$userData=$jsonData["data"][0];
-			var_dump($userData[0]);
 			//var_dump($userData);
-			if($name = user::login($userData)){
+			$returnData = user::login($userData);
+			if($returnData["result"]=="OK"){
 				if(!isset($connection->uid))
 					$connection->uid = $userData["account"] ;
-				$tcp_worker->connectionsID[$connection->uid] = $connection;		
-				$connection->send("login succeed , your name is $name\n");
+				$tcp_worker->connectionsID[$connection->uid] = $connection;
+
 				//获取该用户的离线消息
-				
-			}else{
-				$connection->send("login failed\n");
+
 			}
+			$connection->send(json_encode($returnData));
 			break;
-		
-		
+
+
 		//登出
 		//Logout
 		case 'Logout':
+
 			$userData = $jsonData["data"][0];
-			var_dump($userData[0]);
-			if(user::logout($userData)){
-				unset($tcp_worker->connectionsID[$userData["account"]]);
-				$connection->send("logout succeed\n");
+			//var_dump($userData[0]);
+
+			if($connection===$tcp_worker->connectionsID[$userData["account"]]){
+				$returnData = user::logout($userData);
+				if(returnData["result"]=="OK"){
+					unset($tcp_worker->connectionsID[$userData["account"]]);
+				}
+
+
 			}else{
-				$connection->send("logout fail\n");
+				$returnData=array("result"=>"Fail",
+
+							);
 			}
+
+			$connection->send(json_encode($returnData));
 			break;
 
+		//注册
+		case 'Signup':
+			$userData = $jsonData["data"][0];
+			$returnData = user::signIn($userData);
 
+
+			$connection->send(json_encode($returnData));
+			break;
 
 		//发送消息
 		//Send|reciverName&message
 		case 'Send':
 			# code...
-		
+
 			$msg = $jsonData["data"][0];
 			//var_dump($msg);
 			if(sendMessageByUid($msg))
@@ -129,7 +148,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 					"msg" => "unknown msg type");
 			$connection->send(json_encode($errormsg));
 			break;
-			
+
 	}
 
 };
@@ -141,7 +160,7 @@ $tcp_worker->onError = function($connection, $code, $msg)
 };
 
 $tcp_worker->onClose = function($connection) use($tcp_worker)
-{	
+{
 	echo "connection   closed\n";
 	foreach ($tcp_worker->connectionsID as $key=>$value) {
 		# code...
@@ -162,7 +181,7 @@ $tcp_worker->onWorkerStop = function($worker)
 //通过connectionID发送消息
 function sendMessageByUid($msg)
 {
-	global $tcp_worker;	
+	global $tcp_worker;
 	$sender=$msg["sender"];
 	$receiver=$msg["receiver"];
 	$msginfo=$msg["msginfo"];
@@ -176,7 +195,7 @@ function sendMessageByUid($msg)
 	        	return true;
     	}else{
     		//发送离线消息
-    		
+
     		return false;
     	}
 }

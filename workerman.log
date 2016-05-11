@@ -441,4 +441,46 @@
 2016-05-04 21:14:27 Workerman[tcp_server.php] start in DEBUG mode
 2016-05-04 21:16:42 Workerman[tcp_server.php] Stopping ...
 2016-05-04 21:16:42 Workerman[tcp_server.php] has been stopped
+<<<<<<< HEAD
 >>>>>>> 995b56a6ed862ff04e8660d1677b963e68e0fde1
+=======
+2016-05-10 22:35:50 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 22:38:39 Workerman[tcp_server.php] Stopping ...
+2016-05-10 22:38:39 Workerman[tcp_server.php] has been stopped
+2016-05-10 22:38:43 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 22:46:45 Workerman[tcp_server.php] Stopping ...
+2016-05-10 22:46:45 Workerman[tcp_server.php] has been stopped
+2016-05-10 22:46:48 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 22:47:20 Workerman[tcp_server.php] Stopping ...
+2016-05-10 22:47:20 Workerman[tcp_server.php] has been stopped
+2016-05-10 22:47:21 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:06:18 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:06:18 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:06:19 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:47:14 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:47:14 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:47:40 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:48:43 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:48:43 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:48:44 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:50:43 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:50:43 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:50:44 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:53:41 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:53:41 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:53:42 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-10 23:56:41 Workerman[tcp_server.php] Stopping ...
+2016-05-10 23:56:41 Workerman[tcp_server.php] has been stopped
+2016-05-10 23:57:15 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-11 00:01:25 Workerman[tcp_server.php] Stopping ...
+2016-05-11 00:01:25 Workerman[tcp_server.php] has been stopped
+2016-05-11 00:01:26 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-11 00:03:51 Workerman[tcp_server.php] Stopping ...
+2016-05-11 00:03:51 Workerman[tcp_server.php] has been stopped
+2016-05-11 00:03:53 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-11 00:07:23 Workerman[tcp_server.php] Stopping ...
+2016-05-11 00:07:23 Workerman[tcp_server.php] has been stopped
+2016-05-11 00:07:23 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-11 00:28:20 Workerman[tcp_server.php] Stopping ...
+2016-05-11 00:28:20 Workerman[tcp_server.php] has been stopped
+>>>>>>> 309f6e95e31426fcca79bc4d0eebb9dae54d6798

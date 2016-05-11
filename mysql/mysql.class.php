@@ -10,21 +10,21 @@ class mysqlHandler
 	private $link = null;
 	private $result = null;
 /*
-	public function __set($name , $value){  
-	        $this->values[$name] = $value;  
-	}  
-	      
-	public function __get($name){  
-		if(isset($this->values[$name])){  
-	            return $this->values[$name];  
-	        }  
-	        else{  
-	            return null;  
-	        }  
+	public function __set($name , $value){
+	        $this->values[$name] = $value;
+	}
+
+	public function __get($name){
+		if(isset($this->values[$name])){
+	            return $this->values[$name];
+	        }
+	        else{
+	            return null;
+	        }
 	 }
 */
 	public function __construct($db,$table){
-		$this->link = new mysqli("127.0.0.1", "root", "hxh896900488", "$db");
+		$this->link = new mysqli("127.0.0.1", "root", "", "$db");
 		$this->link->query("SET NAMES utf8");
 		$this->table = $table;
 	}
@@ -54,20 +54,20 @@ class mysqlHandler
 	}
 
 	public function select($column = "*" , $conditions = array()){
-		
+
 		$sql = "SELECT $column FROM `$this->table` ";
 		$qualifier ="";
-		foreach($conditions as $key => $value){  
-			if(!empty($qualifier)){  
-			        $qualifier .= ' AND ';  
-			}  
+		foreach($conditions as $key => $value){
+			if(!empty($qualifier)){
+			        $qualifier .= ' AND ';
+			}
 			if($key=="password")
-		         	$qualifier .= "`$key`= MD5(\"" . $this->clear($value) . "\")";  
+		         	$qualifier .= "`$key`= MD5(\"" . $this->clear($value) . "\")";
 		        else
-		            	$qualifier .= "`$key`= \"" . $this->clear($value) . "\" ";  
-		 }  
+		            	$qualifier .= "`$key`= \"" . $this->clear($value) . "\" ";
+		 }
 		//echo $qualifier;
-		$sql .=  $qualifier ? "WHERE $qualifier " :null; 
+		$sql .=  $qualifier ? "WHERE $qualifier " :null;
 		//echo $sql;
 		return $this->excute($sql);
 	}
@@ -85,44 +85,44 @@ class mysqlHandler
 		$updateData = substr($updateData, 0, strlen($updateData)-1);
 
 		$qualifier ="";
-		foreach($condition as $column => $value){  
-			if(!empty($qualifier)){  
-			         $qualifier .= ' AND ';  
-			}  
+		foreach($condition as $column => $value){
+			if(!empty($qualifier)){
+			         $qualifier .= ' AND ';
+			}
 			if($column=="password")
-		         	$qualifier .= "`$column`= MD5(\"" . $this->clear($value) . "\")";  
+		         	$qualifier .= "`$column`= MD5(\"" . $this->clear($value) . "\")";
 		        else
-		            	$qualifier .= "`$column`= \"" . $this->clear($value) . "\" ";  
-		 }  
+		            	$qualifier .= "`$column`= \"" . $this->clear($value) . "\" ";
+		 }
 
 
-		$sql = "UPDATE `$this->table` SET $updateData ";	
-		$sql .=  $qualifier ? "WHERE $qualifier " :null; 
-	//	echo $sql; 
-		
+		$sql = "UPDATE `$this->table` SET $updateData ";
+		$sql .=  $qualifier ? "WHERE $qualifier " :null;
+	//	echo $sql;
+
 		return $this->excute($sql);
 	}
 
 	public function delete($id){
 
 		$sql= "DELETE FROM `$this->table`  WHERE `id` = $id";
-		
+
 		return $this->excute($sql);
 	}
 
 	public function insert($data=array()){
-		
+
 		$colNames = " ";
 		$colValues = " ";
 		foreach($data as $key => $value){
 			$colNames .='`' .$this->clear($key).'`,';
 			if($key == "password")
-				$colValues .= "MD5(\"".$this->clear($value)."\"),"; 
+				$colValues .= "MD5(\"".$this->clear($value)."\"),";
 			else
-				$colValues .= "\"".$this->clear($value)."\","; 
+				$colValues .= "\"".$this->clear($value)."\",";
 		}
 		$colNames = substr($colNames, 0, strlen($colNames) - 1);
-         	$colValues = substr($colValues, 0, strlen($colValues) - 1);
+         		$colValues = substr($colValues, 0, strlen($colValues) - 1);
 
 		$sql="INSERT INTO `$this->table` (".$colNames.") VALUES (".$colValues .')';
 		//echo $sql;
@@ -131,7 +131,7 @@ class mysqlHandler
 	}
 
 
-} 	
+}
 
 
 

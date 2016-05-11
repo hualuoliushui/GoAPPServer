@@ -14,53 +14,78 @@ class user{
 	 */
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		var_dump($userData);
+		//var_dump($userData);
+		$returnData;
 		$userAccount = $userData["account"];
 		$userPassword = $userData["password"];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
-		$updateData = array(
-								'status' => '1'
-								);
-		$conditions = array(
-								'account' => $userAccount,
-								'password' => $userPassword
-								);
-		if($mysqli->update($updateData,$conditions)){
-			if($mysqli->getLink()->affected_rows==1){
-				$col = "name";
-				$result = $mysqli->select($col,$conditions);
-				$name = $result->fetch_assoc()["name"];
-				return $name;
-			}	
+
+		$result = $mysqli->select("COUNT(*)",$userData);
+		if($mysqli->getLink()->affected_rows==1){
+			$updateData = array(
+					'status' => '1'
+					);
+			$conditions = $userData;
+			if($mysqli->update($updateData,$conditions)){
+				if($mysqli->getLink()->affected_rows==1){
+					$col = "name";
+					var_dump($conditions);
+					$result = $mysqli->select($col,$conditions);
+					$name = $result->fetch_assoc()["name"];
+					$returnData=array(
+								"result" => "OK",
+								"name" => $name
+								);	//成功返回用户名
+					return $returnData;
+				}else{
+					$returnData=array(
+								"result" => "fail",
+								"reson" => "用户已登录"
+								);	//已登录
+					return $returnData;
+				}
+			}
+		}else{
+			$returnData=array(
+						"result" => "fail",
+						"reson" => "张号或密码错误"
+						);			//账号或密码错误
+			return $returnData;
 		}
-		
-		return false;
+		$returnData = array(
+					"result"=>"fail",
+					"reson"=>"未知错误，稍后再试。"
+					);
+		return $returnData;
+
 
 	}
 
 	/**
 	 * 用户登出
-	 *  @param  array  $userName 用户名 
+	 *  @param  array  $userName 用户名
 	 * @return [bool]           [成功 TRUE 失败 FALSE]
 	 */
-	public static function logout($userName){
+	public static function logout($userData){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		
-		
+		$returnData;
+
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
-							'status' => '0'
-							);
-		$conditions = array(
-							'name' => $userName["name"],
-						
-							);		
-		
+					'status' => '0'
+					);
+		$conditions =$userData;
+
 		$result = $mysqli->update($updateData,$conditions);
 		//var_dump($result);
 		if($mysqli->getLink()->affected_rows==1){
-			return true;
+			$returnData = array(
+						"result" => "OK"
+						"info" => "logout "
+						);
+			return $returnData;
 		}
+
 		return false;
 
 	}
@@ -72,41 +97,53 @@ class user{
 	 */
 	public static function signIn($userData = array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		$userAccount = $userData[0];
+		$userAccount = $userData["account"];
 		$col = "COUNT(*)";
 		//$conditions =  "`name` = \"".$userName ."\"";
 		$conditions = array(
-							'account' => $userAccount
-							);
-		
+					'account' => $userAccount
+					);
+
 		if($result = $mysqli->select($col,$conditions)){
 			$colnum=$result->fetch_assoc()["COUNT(*)"];
 			echo $colnum;
-			if($colnum==0){		
-				$userName = $userData[1];
-				$userPassword = $userData[2];
+			if($colnum==0){
+				$userName = $userData["name"];
+				$userPassword = $userData["password"];
 				$insertData = array(
 							'account' => $userAccount,
 							'name' => $userName,
 							'password' => $userPassword,
-
 							);
 
-				$result = $mysqli->insert($insertData);
-				return $result;
+				if($result = $mysqli->insert($insertData)){
+					$returnData = array(
+						"result"=>"OK");
+					return $returnData;
+				}
+
 			}else{
-				return false;
+				$returnData = array(
+							"result"=>"failed",
+							"reson"=>"账号已被注册"
+							);
+				return $returnData;
 			}
 		}
-		return false;
+		$returnData = array(
+					"result"=>"fail",
+					"reson"=>"未知错误，稍后再试。"
+					);
+		return $returnData;
 	}
 
 	/**
 	 * 设置离线消息
 	 * @return [type] [description]
 	 */
-	public static function setOfflineMsg(){
-
+	public static function setOfflineMsg($data=array()){
+		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
+		$result = $mysqli->insert($data);
 	}
 
 
@@ -115,16 +152,39 @@ class user{
 	 * @return [type] [description]
 	 */
 	public static function getOfflineMsg($name){
+		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
+		$col = "*";
+		$conditions = array(
+							'receiver' => $name
+							);
+		$i=0;
+    $arr=array();
+    if($result = $mysqli->select($col,$conditions)){
+    		while ($row = mysqli_fetch_row($result)) {
+    			$arr[$i++]=array(
+    				'sender'=>$row[1],
+    				'receiver'=>$row[2],
+    				'meg'=>$row[3]
+    				);
+    		}
 
+    	return $arr;
+    }
+
+
+    return null;
 	}
 
-	
-	
+
+
 }
 
 //test
 /*
 $user1 = new user;
+//$user1->setOfflineMsg(array('sender'=>"hexuhao",'receiver'=>"you",'msg'=>"12345"));
+$arr=$user1->getOfflineMsg("you");
+print_r($arr);
 
 if($user1->login(array("Hxuhao233","12345")))
 	echo "login succeed\n";
