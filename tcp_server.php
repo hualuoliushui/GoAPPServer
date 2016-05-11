@@ -121,7 +121,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			break;
 
 		//注册
-		case 'Signin':
+		case 'Signup':
 			$userData = $jsonData["data"][0];
 			$returnData = user::signIn($userData); 
 		
