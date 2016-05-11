@@ -101,6 +101,23 @@ class user{
 		return false;
 	}
 
+	/**
+	 * 设置离线消息
+	 * @return [type] [description]
+	 */
+	public static function setOfflineMsg(){
+
+	}
+
+
+	/**
+	 * 获取离线消息
+	 * @return [type] [description]
+	 */
+	public static function getOfflineMsg($name){
+
+	}
+
 	
 	
 }

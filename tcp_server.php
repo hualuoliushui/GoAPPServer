@@ -53,13 +53,15 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	$decode =str_replace("\r\n", "", $decode);*/
 	$jsonData=json_decode($data,true);
 	if(!isset($jsonData["action"])){
-		$errormsg=array(	"code"=>414,
-							"msg" => "error type");
-		echo "from ". $connection->getRemoteIp()."\n";
+		$errormsg=array(
+					"code"=>414,
+					"msg" => "error type"
+					);
+		//echo "from ". $connection->getRemoteIp()."\n";
 	//	sleep(1);
 		if($connection->send(json_encode($errormsg)))
 			echo "send succeed\n";
-		flush();
+		
 		return ;
 	}
 	switch ($jsonData["action"]) {
@@ -83,13 +85,16 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			//var_dump($userData);
 			if($name = user::login($userData)){
 				if(!isset($connection->uid))
-					$connection->uid = $name ;
+					$connection->uid = $userData["account"] ;
 				$tcp_worker->connectionsID[$connection->uid] = $connection;		
-				$connection->send("login succeed , your name is $connection->uid\n");
+				$connection->send("login succeed , your name is $name\n");
+				//获取该用户的离线消息
+				
 			}else{
 				$connection->send("login failed\n");
 			}
 			break;
+		
 		
 		//登出
 		//Logout
@@ -97,7 +102,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			$userData = $jsonData["data"][0];
 			var_dump($userData[0]);
 			if(user::logout($userData)){
-				unset($tcp_worker->connectionsID[$userData["name"]]);
+				unset($tcp_worker->connectionsID[$userData["account"]]);
 				$connection->send("logout succeed\n");
 			}else{
 				$connection->send("logout fail\n");
@@ -120,8 +125,8 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			break;
 
 		default:
-			$errormsg=array(	"code"=>444,
-								"msg" => "unknown msg type");
+			$errormsg=array("code"=>444,
+					"msg" => "unknown msg type");
 			$connection->send(json_encode($errormsg));
 			break;
 			
@@ -166,13 +171,18 @@ function sendMessageByUid($msg)
 	var_dump($newmsg);
 	if(isset($tcp_worker->connectionsID[$receiver]))
 	{
-        	$connection = $tcp_worker->connectionsID[$receiver];
-        	$connection->send(json_encode($newmsg));
-        	return true;
+	        	$connection = $tcp_worker->connectionsID[$receiver];
+	        	$connection->send(json_encode($newmsg));
+	        	return true;
     	}else{
+    		//发送离线消息
+    		
     		return false;
     	}
 }
+
+
+
 
 // 运行所有worker实例
 Worker::runAll();

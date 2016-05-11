@@ -415,6 +415,7 @@
 2016-05-02 14:36:32 Workerman[tcp_server.php] start in DEBUG mode
 2016-05-02 14:39:12 Workerman[tcp_server.php] Stopping ...
 2016-05-02 14:39:12 Workerman[tcp_server.php] has been stopped
+<<<<<<< HEAD
 >>>>>>> 27b8acc42c0a0b519fd201ada04dcb50cac0e0f0
 2016-05-03 17:48:40 Workerman[tcp_server.php] start in DAEMON mode
 2016-05-03 22:41:52 Workerman[tcp_server.php] status 
@@ -430,3 +431,14 @@
 2016-05-03 23:22:29 Workerman[tcp_server.php] Stopping ...
 2016-05-03 23:22:29 Workerman[tcp_server.php] has been stopped
 2016-05-03 23:22:32 Workerman[tcp_server.php] start in DAEMON mode
+=======
+2016-05-04 21:00:33 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-04 21:02:59 Workerman[tcp_server.php] Stopping ...
+2016-05-04 21:02:59 Workerman[tcp_server.php] has been stopped
+2016-05-04 21:03:00 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-04 21:14:26 Workerman[tcp_server.php] Stopping ...
+2016-05-04 21:14:26 Workerman[tcp_server.php] has been stopped
+2016-05-04 21:14:27 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-04 21:16:42 Workerman[tcp_server.php] Stopping ...
+2016-05-04 21:16:42 Workerman[tcp_server.php] has been stopped
+>>>>>>> 995b56a6ed862ff04e8660d1677b963e68e0fde1
