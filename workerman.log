@@ -484,3 +484,6 @@
 2016-05-11 00:28:20 Workerman[tcp_server.php] Stopping ...
 2016-05-11 00:28:20 Workerman[tcp_server.php] has been stopped
 >>>>>>> 309f6e95e31426fcca79bc4d0eebb9dae54d6798
+2016-05-11 18:12:53 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-11 18:12:54 Workerman[tcp_server.php] Stopping ...
+2016-05-11 18:12:54 Workerman[tcp_server.php] has been stopped

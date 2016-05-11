@@ -80,7 +80,7 @@ class user{
 		//var_dump($result);
 		if($mysqli->getLink()->affected_rows==1){
 			$returnData = array(
-						"result" => "OK"
+						"result" => "OK",
 						"info" => "logout "
 						);
 			return $returnData;
