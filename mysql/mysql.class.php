@@ -122,7 +122,7 @@ class mysqlHandler
 				$colValues .= "\"".$this->clear($value)."\",";
 		}
 		$colNames = substr($colNames, 0, strlen($colNames) - 1);
-         	$colValues = substr($colValues, 0, strlen($colValues) - 1);
+         		$colValues = substr($colValues, 0, strlen($colValues) - 1);
 
 		$sql="INSERT INTO `$this->table` (".$colNames.") VALUES (".$colValues .')';
 		//echo $sql;

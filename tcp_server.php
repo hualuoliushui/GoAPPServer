@@ -49,6 +49,8 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	//global $tcp_worker;
 	$data=str_replace("\r\n", "",$data);
 	echo "$data";
+
+	$returnData;
 	/*$decode = explode("|", $data);
 	$decode =str_replace("\r\n", "", $decode);*/
 	$jsonData=json_decode($data,true);
@@ -66,10 +68,13 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	}
 	switch ($jsonData["action"]) {
 
+
 		//获取POI信息
 		//GetPOI|palce&location
 		case 'GetPOI':
 			# code...
+
+
 			$returnData =  getPOI::getPOIData($decode[1]);
 	    		$connection->send($returnData);
 			break;
@@ -77,39 +82,53 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 		//登录
 		//Login|account&password
 		case 'Login':
-			#
-		/*	$userData =str_replace("\n", "", $decode);
-			$userData = explode("&", $decode[1]);*/
+
 			$userData=$jsonData["data"][0];
-			var_dump($userData[0]);
 			//var_dump($userData);
-			if($name = user::login($userData)){
+			$returnData = user::login($userData);
+			if($returnData["result"]=="OK"){
 				if(!isset($connection->uid))
 					$connection->uid = $userData["account"] ;
 				$tcp_worker->connectionsID[$connection->uid] = $connection;
-				$connection->send("login succeed , your name is $name\n");
+
 				//获取该用户的离线消息
 
-			}else{
-				$connection->send("login failed\n");
 			}
+			$connection->send(json_encode($returnData));
 			break;
 
 
 		//登出
 		//Logout
 		case 'Logout':
+
 			$userData = $jsonData["data"][0];
-			var_dump($userData[0]);
-			if(user::logout($userData)){
-				unset($tcp_worker->connectionsID[$userData["account"]]);
-				$connection->send("logout succeed\n");
+			//var_dump($userData[0]);
+
+			if($connection===$tcp_worker->connectionsID[$userData["account"]]){
+				$returnData = user::logout($userData);
+				if(returnData["result"]=="OK"){
+					unset($tcp_worker->connectionsID[$userData["account"]]);
+				}
+
+
 			}else{
-				$connection->send("logout fail\n");
+				$returnData=array("result"=>"Fail",
+
+							);
 			}
+
+			$connection->send(json_encode($returnData));
 			break;
 
+		//注册
+		case 'Signup':
+			$userData = $jsonData["data"][0];
+			$returnData = user::signIn($userData);
 
+
+			$connection->send(json_encode($returnData));
+			break;
 
 		//发送消息
 		//Send|reciverName&message
