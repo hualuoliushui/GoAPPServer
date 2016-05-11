@@ -107,7 +107,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 
 			if($connection===$tcp_worker->connectionsID[$userData["account"]]){
 				$returnData = user::logout($userData);
-				if(returnData["result"]=="OK"){
+				if($returnData["result"]=="OK"){
 					unset($tcp_worker->connectionsID[$userData["account"]]);
 				}
 
