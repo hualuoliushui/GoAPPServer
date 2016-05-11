@@ -31,31 +31,31 @@ class user{
 				$result = $mysqli->select($col,$conditions);
 				$name = $result->fetch_assoc()["name"];
 				return $name;
-			}	
+			}
 		}
-		
+
 		return false;
 
 	}
 
 	/**
 	 * 用户登出
-	 *  @param  array  $userName 用户名 
+	 *  @param  array  $userName 用户名
 	 * @return [bool]           [成功 TRUE 失败 FALSE]
 	 */
 	public static function logout($userName){
 		$mysqli = new mysqlHandler("GoAPP","User");
-		
-		
+
+
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
 		$updateData = array(
 							'status' => '0'
 							);
 		$conditions = array(
 							'name' => $userName["name"],
-						
-							);		
-		
+
+							);
+
 		$result = $mysqli->update($updateData,$conditions);
 		//var_dump($result);
 		if($mysqli->getLink()->affected_rows==1){
@@ -78,11 +78,11 @@ class user{
 		$conditions = array(
 							'account' => $userAccount
 							);
-		
+
 		if($result = $mysqli->select($col,$conditions)){
 			$colnum=$result->fetch_assoc()["COUNT(*)"];
 			echo $colnum;
-			if($colnum==0){		
+			if($colnum==0){
 				$userName = $userData[1];
 				$userPassword = $userData[2];
 				$insertData = array(
@@ -105,8 +105,9 @@ class user{
 	 * 设置离线消息
 	 * @return [type] [description]
 	 */
-	public static function setOfflineMsg(){
-
+	public static function setOfflineMsg($data=array()){
+		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
+		$result = $mysqli->insert($data);
 	}
 
 
@@ -115,16 +116,39 @@ class user{
 	 * @return [type] [description]
 	 */
 	public static function getOfflineMsg($name){
+		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
+		$col = "*";
+		$conditions = array(
+							'receiver' => $name
+							);
+		$i=0;
+    $arr=array();
+    if($result = $mysqli->select($col,$conditions)){
+    		while ($row = mysqli_fetch_row($result)) {
+    			$arr[$i++]=array(
+    				'sender'=>$row[1],
+    				'receiver'=>$row[2],
+    				'meg'=>$row[3]
+    				);
+    		}
 
+    	return $arr;
+    }
+
+
+    return null;
 	}
 
-	
-	
+
+
 }
 
 //test
 /*
 $user1 = new user;
+//$user1->setOfflineMsg(array('sender'=>"hexuhao",'receiver'=>"you",'msg'=>"12345"));
+$arr=$user1->getOfflineMsg("you");
+print_r($arr);
 
 if($user1->login(array("Hxuhao233","12345")))
 	echo "login succeed\n";
