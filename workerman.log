@@ -503,3 +503,12 @@
 2016-05-12 20:55:26 Workerman[tcp_server.php] Stopping ...
 2016-05-12 20:55:26 Workerman[tcp_server.php] has been stopped
 2016-05-12 20:55:26 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-12 21:12:56 Workerman[tcp_server.php] Stopping ...
+2016-05-12 21:12:56 Workerman[tcp_server.php] has been stopped
+2016-05-12 21:12:57 Workerman[tcp_server.php] start in DEBUG mode
+2016-05-12 21:18:12 WORKER EXIT UNEXPECTED E_RECOVERABLE_ERROR Object of class Workerman\Connection\TcpConnection could not be converted to string in /home/hxuhao/GoAPPServer/tcp_server.php on line 164
+2016-05-12 21:18:12 worker[none:4468] exit with status 65280
+2016-05-12 21:19:17 WORKER EXIT UNEXPECTED E_RECOVERABLE_ERROR Object of class Workerman\Connection\TcpConnection could not be converted to string in /home/hxuhao/GoAPPServer/tcp_server.php on line 164
+2016-05-12 21:19:17 worker[none:4591] exit with status 65280
+2016-05-12 21:29:19 Workerman[tcp_server.php] Stopping ...
+2016-05-12 21:29:19 Workerman[tcp_server.php] has been stopped

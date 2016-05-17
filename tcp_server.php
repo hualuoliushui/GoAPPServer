@@ -70,17 +70,6 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 	}
 	switch ($jsonData["action"]) {
 
-
-		//获取POI信息
-		//GetPOI|palce&location
-		case 'GetPOI':
-			# code...
-
-
-			$returnData =  getPOI::getPOIData($decode[1]);
-	    		$connection->send($returnData);
-			break;
-
 		//登录
 		//Login|account&password
 		case 'Login':
@@ -130,6 +119,22 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 
 
 			$connection->send(json_encode($returnData));
+			break;
+
+		//修改个人信息
+		case 'ModifyInfo':
+
+			break;
+
+		//搜索他人
+		case 'SearchPerson':
+
+
+			break;
+
+		//添加好友
+		case 'AddFriend':
+
 			break;
 
 		//发送消息
