@@ -29,7 +29,7 @@ class user{
 			if($mysqli->update($updateData,$conditions)){
 				if($mysqli->getLink()->affected_rows==1){
 					$col = "name";
-					var_dump($conditions);
+					//var_dump($conditions);
 					$result = $mysqli->select($col,$conditions);
 					$name = $result->fetch_assoc()["name"];
 					$returnData=array(
@@ -81,13 +81,13 @@ class user{
 		//var_dump($result);
 		if($mysqli->getLink()->affected_rows==1){
 			$returnData = array(
-						"action" => 200,
+						"code" => 200,
 						"action" => "Logout "
 						);
 			return $returnData;
 		}
 		$returnData = array(
-						"action" => 201,
+						"code" => 201,
 						"action" => "Logout "
 						);
 		return $returnData;

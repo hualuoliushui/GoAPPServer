@@ -49,7 +49,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 {
 	//global $tcp_worker;
 	$data=str_replace("\r\n", "",$data);
-	echo "$data";
+	//echo "$data";
 
 	$returnData;
 	/*$decode = explode("|", $data);
@@ -77,9 +77,10 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			$userData=$jsonData["data"][0];
 			//var_dump($userData);
 			$returnData = user::login($userData);
-			if($returnData["result"]=="OK"){
+			if($returnData["code"]==200){
 				if(!isset($connection->uid))
 					$connection->uid = $userData["account"] ;
+				echo $userData["account"] ." is online\n";
 				$tcp_worker->connectionsID[$connection->uid] = $connection;
 
 				//获取该用户的离线消息
@@ -126,14 +127,50 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 
 			break;
 
-		//搜索他人
+		//搜索他人信息
 		case 'SearchPerson':
 
+			$account = $jsonData["data"][0]["account"];
+			$returnData = user::getInfomation($account);
 
+
+			$connection->send(json_encode($returnData));
 			break;
 
 		//添加好友
 		case 'AddFriend':
+			$returnData;
+			$msg = $jsonData["data"][0];
+			//$msg["receiver"] = $msg[];
+			switch ($msg["type"]) {
+				case 'apply':
+					# code...
+					break;
+				if(sendMessageByUid($msg)){
+					$returnData = array(
+								"action"=>"AddFriend");
+					$connection->send("send succeed\n");
+				}
+				else{
+
+					$connection->send('send failed\n');
+				}
+			
+
+				case 'agree':
+					$accounts=array(
+								"USER01"=>$msg["receiver"],
+								"USER02"=>$msg["applyer"]);
+					$returnData = user::addFriend();
+					$connection->send(json_encode($returnData));
+					break;
+				default:
+					# code...
+					break;
+			}
+				
+
+
 
 			break;
 
@@ -143,11 +180,24 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			# code...
 
 			$msg = $jsonData["data"][0];
+
+			$msg["type"] = "chat";
 			//var_dump($msg);
-			if(sendMessageByUid($msg))
-				$connection->send("send succeed\n");
-			else
-				$connection->send('send failed\n');
+			if(sendMessageByUid($msg)){
+				$returnData = array(
+							"action"=>"Send",
+							"code"=>200
+							);
+				$connection->send(json_encode($returnData));
+			}
+			else{
+
+				$returnData = array(
+							"action"=>"Send",
+							"code"=>204
+							);
+				$connection->send(json_encode($returnData));
+			}
 			break;
 
 		default:
@@ -192,16 +242,14 @@ $tcp_worker->onWorkerStop = function($worker)
 function sendMessageByUid($msg)
 {
 	global $tcp_worker;
-	$sender=$msg["sender"];
+	var_dump($msg);
 	$receiver=$msg["receiver"];
-	$msginfo=$msg["msginfo"];
-	$newmsg=array("sender"=>$sender,
-			"msginfo"=>$msginfo);
-	var_dump($newmsg);
+	$returnData=array();
+	//var_dump($newmsg);
 	if(isset($tcp_worker->connectionsID[$receiver]))
 	{
 	        	$connection = $tcp_worker->connectionsID[$receiver];
-	        	$connection->send(json_encode($newmsg));
+	        	$connection->send(json_encode($msg));
 	        	return true;
     	}else{
     		//发送离线消息
