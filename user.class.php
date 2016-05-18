@@ -91,7 +91,7 @@ class user{
 						"action" => "Logout "
 						);
 		return $returnData;
-		
+
 
 	}
 
@@ -144,49 +144,87 @@ class user{
 		return $returnData;
 	}
 
-	/**
-	 * 设置离线消息
-	 * @return [type] [description]
+  /**
+	 * 获取信息
+	 * @param  account  用户账户
+	 * @return array ['ID']['Sex']['Age']['School']['Phone']['Account']['Name']['Status']
 	 */
-	public static function setOfflineMsg($data=array()){
-		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
-		$result = $mysqli->insert($data);
-	}
-
-
-	/**
-	 * 获取离线消息
-	 * @return [type] [description]
-	 */
-	public static function getOfflineMsg($name){
-		$mysqli = new mysqlHandler("GoAPP","offlineMsg");
+	public static function getInformation($account){
+		$mysqli = new mysqlHandler("GoAPP","information");
 		$col = "*";
 		$conditions = array(
-					'receiver' => $name
+					'Account' => $account
 					);
-		$i=0;
-		$arr=array();
 		if($result = $mysqli->select($col,$conditions)){
-		    	while ($row = mysqli_fetch_row($result)) {
-		    		$arr[$i++]=array(
-			   				'sender'=>$row[1],
-			    				'receiver'=>$row[2],
-			    				'meg'=>$row[3]
-			    				);
-    		}
 
-    	return $arr;
-    }
-
-
-    return null;
+			$row=mysqli_fetch_row($result);
+			if($row[7]==2){//status,0=>保密,1=>对好友公开，2=>公开
+				$arr = array(
+					'ID'=>$row[0],
+					'Sex'=>$row[1],
+					'Age'=>$row[2],
+					'School'=>$row[3],
+					'Phone'=>$row[4],
+					'Account'=>$row[5],
+					'Name'=>$row[6],
+					'Status'=>$row[7],
+					);
+        return $arr;
+			}
+		}
+		return null;
 	}
 
+	/**
+	 * 添加好友
+	 * @param  array   [USER01]  [USER02]
+	 * @return []
+	 */
+	public static function makeFriends($data=array()){
+    $mysqli = new mysqlHandler("GoAPP","Friends");
+    $result = $mysqli->insert($data);
+	}
 
+	/**
+	 * 删除好友
+	 * @param   array  [USER01]   [USER02]
+	 * @return []
+	 */
+	public static function deleteFriends($data=array()){
+    $mysqli = new mysqlHandler("GoAPP","Friends");
+
+    $col = "*";
+		$conditions = array(
+					'USER01' => $data["USER01"],
+					'USER02' => $data["USER02"]
+					);
+		if(count($result = $mysqli->select($col,$conditions))<0){
+			$row=mysqli_fetch_row($result);
+			$mysqli->delete($row[0]);
+		}
+		else{
+			$conditions = array(
+					'USER01' => $data["USER02"],
+					'USER02' => $data["USER01"]
+					);
+			$result = $mysqli->select($col,$conditions);
+			$row=mysqli_fetch_row($result);
+			$mysqli->delete($row[0]);
+		}
+
+	}
 
 }
 
 //test
+//$user1=new user;
+//	'USER01'=>"456",
+//	'USER02'=>"123"
+//	);
+//$user1->makeFriends($data);
+//$user1->deleteFriends($data);
+//$arr=$user1->getInformation("123");
+//print_r($arr);
 /*
 $user1 = new user;
 //$user1->setOfflineMsg(array('sender'=>"hexuhao",'receiver'=>"you",'msg'=>"12345"));

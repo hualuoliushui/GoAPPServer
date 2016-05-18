@@ -24,7 +24,7 @@ class mysqlHandler
 	 }
 */
 	public function __construct($db,$table){
-		$this->link = new mysqli("127.0.0.1", "root", "hxh896900488", "$db");
+		$this->link = new mysqli("127.0.0.1", "root", "", "$db");
 		$this->link->query("SET NAMES utf8");
 		$this->table = $table;
 	}
@@ -63,8 +63,8 @@ class mysqlHandler
 			}
 			if($key=="password")
 		         	$qualifier .= "`$key`= MD5(\"" . $this->clear($value) . "\")";
-		        else
-		            	$qualifier .= "`$key`= \"" . $this->clear($value) . "\" ";
+		  else
+		  	$qualifier .= "`$key`= \"" . $this->clear($value) . "\" ";
 		 }
 		//echo $qualifier;
 		$sql .=  $qualifier ? "WHERE $qualifier " :null;

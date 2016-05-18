@@ -149,7 +149,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			$errormsg=array("code"=>444,
 					"data" => array("msg"=>"unknown msg type"));
 			$connection->send(json_encode($errormsg));
-		
+
 			sleep(5);
 			$connection->send(json_encode($errormsg));
 			break;
@@ -158,7 +158,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 
 };
 
-//当客户端连接错误是
+//当客户端连接错误时
 $tcp_worker->onError = function($connection, $code, $msg)
 {
     echo "$connection error $code $msg\n";
