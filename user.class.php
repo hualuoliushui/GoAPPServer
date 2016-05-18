@@ -41,7 +41,7 @@ class user{
 				}else{
 					$returnData=array(
 								"action"=>"Login",
-								"code" => 202
+								"code" => 205
 								);	//已登录
 					return $returnData;
 				}
@@ -152,6 +152,8 @@ class user{
 	public static function getInformation($account){
 		$mysqli = new mysqlHandler("GoAPP","information");
 		$col = "*";
+		$arr;
+		$returnData;
 		$conditions = array(
 					'Account' => $account
 					);
@@ -169,10 +171,22 @@ class user{
 					'Name'=>$row[6],
 					'Status'=>$row[7],
 					);
-        return $arr;
+        			//return $arr;
+        			$returnData = array(
+        					"action"=>"SearchPerson",
+        					"code"=>200,
+        					"data"=>$arr
+        					);
 			}
 		}
-		return null;
+
+		//return null;
+		$returnData = array(
+				"action"=>"SearchPerson",
+				"code"=>207
+				);
+
+		return $returnData;
 	}
 
 	/**
@@ -181,8 +195,8 @@ class user{
 	 * @return []
 	 */
 	public static function makeFriends($data=array()){
-    $mysqli = new mysqlHandler("GoAPP","Friends");
-    $result = $mysqli->insert($data);
+    		$mysqli = new mysqlHandler("GoAPP","Friends");
+   		$result = $mysqli->insert($data);
 	}
 
 	/**
@@ -191,9 +205,9 @@ class user{
 	 * @return []
 	 */
 	public static function deleteFriends($data=array()){
-    $mysqli = new mysqlHandler("GoAPP","Friends");
+   		$mysqli = new mysqlHandler("GoAPP","Friends");
 
-    $col = "*";
+    		$col = "*";
 		$conditions = array(
 					'USER01' => $data["USER01"],
 					'USER02' => $data["USER02"]
