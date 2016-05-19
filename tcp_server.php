@@ -145,23 +145,28 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			switch ($msg["type"]) {
 				case 'apply':
 					# code...
-					break;
-				if(sendMessageByUid($msg)){
-					$returnData = array(
-								"action"=>"AddFriend");
-					$connection->send("send succeed\n");
-				}
-				else{
+					
+					if(sendMessageByUid($msg)){
+						$returnData = array(
+									
+									"action"=>"AddFriend",
+									"code"=>200,
+									"data"=>array("type"=>"apply")
+									);
+						$connection->send("send succeed\n");
+					}
+					else{
 
-					$connection->send('send failed\n');
-				}
-			
+						$connection->send('send failed\n');
+					}
+				
+					break;
 
 				case 'agree':
 					$accounts=array(
 								"USER01"=>$msg["receiver"],
 								"USER02"=>$msg["applyer"]);
-					$returnData = user::addFriend();
+					$returnData = user::makeFriends();
 					$connection->send(json_encode($returnData));
 					break;
 				default:

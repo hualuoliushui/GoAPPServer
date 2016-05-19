@@ -19,7 +19,7 @@ class user{
 		$userAccount = $userData["account"];
 		$userPassword = $userData["password"];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
-
+		var_dump($userData);
 		$result = $mysqli->select("COUNT(*)",$userData);
 		if($mysqli->getLink()->affected_rows==1){
 			$updateData = array(
@@ -195,8 +195,27 @@ class user{
 	 * @return []
 	 */
 	public static function makeFriends($data=array()){
-    		$mysqli = new mysqlHandler("GoAPP","Friends");
-   		$result = $mysqli->insert($data);
+		$returnData= array(
+    			"action"=>"AddFriend"
+    			);
+		$col = "COUNT(*)";
+		$result;
+		$mysqli = new mysqlHandler("GoAPP","Friends");
+		usort($data, strnatcmp);
+		$result=$mysqli->select($col,$data);
+    		if($result->fetch_assoc()[$col]==0){
+    			if($result = $mysqli->insert($data)){
+    				$returnData["code"]=200;
+    				return $returnData;
+    			}
+    		}else{
+    			$returnData["code"]=208;
+    			return $returnData;
+    		}
+
+
+   		
+
 	}
 
 	/**
