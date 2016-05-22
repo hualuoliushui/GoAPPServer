@@ -13,7 +13,7 @@ require_once './msgHander.class.php';
 
 
 // 创建一个Worker监听2347端口，不使用任何应用层协议
-$tcp_worker = new Worker("tcp://0.0.0.0:2347");
+$tcp_worker = new Worker("tcp://0.0.0.0:6666");
 
 //创建管理用户链接的数组
 $tcp_worker->connectionsID = array();
@@ -122,6 +122,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 			$connection->send(json_encode($returnData));
 			break;
 
+
 		//修改个人信息
 		case 'ModifyInfo':
 
@@ -167,7 +168,7 @@ $tcp_worker->onMessage = function($connection, $data) use ($tcp_worker)
 								"USER01"=>$msg["receiver"],
 								"USER02"=>$msg["applyer"]);
 					$returnData = user::makeFriends();
-					$connection->send(json_encode($returnData));
+					sendMessageByUid();
 					break;
 				default:
 					# code...
@@ -230,6 +231,7 @@ $tcp_worker->onClose = function($connection) use($tcp_worker)
 	foreach ($tcp_worker->connectionsID as $key=>$value) {
 		# code...
 		if($value==$connection){
+
 			unset($tcp_worker->connectionsID[$key]);
 			echo "connection with $key closed\n";
 		}
