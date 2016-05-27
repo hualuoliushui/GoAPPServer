@@ -15,17 +15,19 @@ class user{
 	public static function login($userData=array()){
 		$mysqli = new mysqlHandler("GoAPP","User");
 		//var_dump($userData);
+	
 		$returnData;
 		$userAccount = $userData["account"];
 		$userPassword = $userData["password"];
 		//$conditions = "`name` = \"$userName \"AND `password` = MD5(\"$userPassword\" )";
-		var_dump($userData);
+	
 		$result = $mysqli->select("COUNT(*)",$userData);
 		if($mysqli->getLink()->affected_rows==1){
 			$updateData = array(
 					'status' => '1'
 					);
 			$conditions = $userData;
+	
 			if($mysqli->update($updateData,$conditions)){
 				if($mysqli->getLink()->affected_rows==1){
 					$col = "name";
@@ -35,8 +37,9 @@ class user{
 					$returnData=array(
 								"action"=>"Login",
 								"code" => 200,
-								"data" => array("name" => $name)
+								"data" => array(json_encode(array("name" => $name)))
 								);	//成功返回用户名
+					var_dump($returnData);
 					return $returnData;
 				}else{
 					$returnData=array(
@@ -77,8 +80,9 @@ class user{
 					);
 		$conditions =$userData;
 
+		var_dump($conditions);
 		$result = $mysqli->update($updateData,$conditions);
-		//var_dump($result);
+		
 		if($mysqli->getLink()->affected_rows==1){
 			$returnData = array(
 						"code" => 200,
@@ -90,6 +94,7 @@ class user{
 						"code" => 201,
 						"action" => "Logout "
 						);
+
 		return $returnData;
 
 
@@ -188,6 +193,55 @@ class user{
 
 		return $returnData;
 	}
+
+	/**
+	 * 设置用户头像
+	 * @param [type] $data [account] 账号 [icon]头像 [type]格式
+	 */
+	public static function setIcon($data){
+		$returnData=array(
+					"action"=>"ModifyInfo"
+				);
+
+		$Icon = $data["icon"];
+		$account = $data["account"];
+		$IconName = "userIcon/".$account . $data["type"];
+		
+		if(file_put_contents($IconName, data)!=false){
+			$returnData["code"]=200;
+		}else{
+			$returnData["code"]=301;
+		}
+
+		return $returnData;
+	}
+	/**
+	 * 获取用户头像
+	 * @param  [array] $data [account] 账号 
+	 * @return [array]  $returnData     	[code] 200 [data] array 
+	 *                                  			[code] 302
+	 */
+	public static function getIcon($data){
+		$returnData;
+
+		$account = $data["account"];
+		$IconName = "userIcon/".$account ."*";
+		$icon = file_get_contents(filename);
+		if($icon!=false){
+			$returnData["code"]=200;
+			$returnData["data"]=array(
+							"account"=>$account,
+							"icon"=>$icon
+						);
+		}else{
+			$returnData["code"]=302;
+		}
+
+		return $returnData;
+	}
+
+
+
 
 	/**
 	 * 添加好友

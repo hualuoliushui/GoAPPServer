@@ -75,6 +75,7 @@ class mysqlHandler
 
 	public function update($data=array() ,$condition=array()){
 		$updateData = "";
+		var_dump($condition);
 		//$data = $this->link->real_escape_string($data);
 		foreach($data as $key => $value){
 			if($key=="password")
@@ -98,7 +99,7 @@ class mysqlHandler
 
 		$sql = "UPDATE `$this->table` SET $updateData ";
 		$sql .=  $qualifier ? "WHERE $qualifier " :null;
-	//	echo $sql;
+		echo $sql;
 
 		return $this->excute($sql);
 	}
