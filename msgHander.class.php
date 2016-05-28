@@ -2,7 +2,7 @@
 require_once './mysql/mysql.class.php';
 class msgHandler{
 	/**
-	 * 获取离线消息
+	 * 获取在线消息
 	 * @return [type] [description]
 	 */
 	public static function setOnlineMsg($data=arrga()){
