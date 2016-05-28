@@ -1,14 +1,6 @@
 <?php
 require_once './mysql/mysql.class.php';
 class msgHandler{
-	/**
-	 * 获取离线消息
-	 * @return [type] [description]
-	 */
-	public static function setOnlineMsg($data=arrga()){
-		$mysqli = new mysqlHandler("GoAPP","onlineMsg");
-		$result = $mysqli->insert($data);
-	}
 		/**
 	 * 设置离线消息
 	 * @return [type] [description]
