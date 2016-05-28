@@ -2,10 +2,10 @@
 require_once './mysql/mysql.class.php';
 class msgHandler{
 	/**
-	 * 获取在线消息
+	 * 设置在线消息
 	 * @return [type] [description]
 	 */
-	public static function setOnlineMsg($data=arrga()){
+	public static function setOnlineMsg($data=array()){
 		$mysqli = new mysqlHandler("GoAPP","onlineMsg");
 		$result = $mysqli->insert($data);
 	}
